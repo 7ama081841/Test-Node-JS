@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-    total: { type: Number, default: 0 },
+    total: { type: Number },
     productList: [
         {
             product: {

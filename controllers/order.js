@@ -21,14 +21,13 @@ const addOrder = async (req, res) => {
             })
             .exec();
 
-        const productsData = savedOrder.productList.map(
-            (item) => item.product.price
+        const getPrice = savedOrder.productList.map(
+            (item) => item.product.price * item.quantity
         );
 
-        const total = productsData.reduce(
-            (accumulator, currentValue) => accumulator + currentValue,
-            0
-        );
+        const total = getPrice.reduce((a, b) => a + b);
+
+        console.log(total);
 
         const updatedOrder = await Order.findByIdAndUpdate(
             newOrder._id,
@@ -44,11 +43,11 @@ const addOrder = async (req, res) => {
             success: true,
             message: "successduly created",
             data: {
-                order: newOrder,
+                order: updatedOrder,
             },
         });
     } catch (err) {
-        // console.log(err);
+        console.log(err);
         res.status(500).json({ error: err });
     }
 };
@@ -68,7 +67,7 @@ const updateProductQuant = async (order) => {
 const getOrderList = async (req, res) => {
     try {
         const orderList = await Order.find()
-            .populate("productList.product", "-_id -sellerId -__v ")
+            .populate("productList.product", "-_id -sellerId -__v  -quantity")
             .populate("client", "-_id -password -role -__v ")
             .select("-__v");
 
