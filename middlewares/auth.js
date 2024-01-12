@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        const decodeToken = jwt.verify(token, "priveteKey");
+        const decodeToken = jwt.verify(token, process.env.TOKENKEY);
         req.client = decodeToken;
 
         next();
