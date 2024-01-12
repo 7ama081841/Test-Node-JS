@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const connectDB = require("./config/database");
+const passport = require("passport");
+const session = require("express-session");
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,6 +19,18 @@ app.use(
         credentials: true,
     })
 );
+
+app.use(
+    session({
+        secret: "your-secret-key",
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+require("./middlewares/bearer");
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api", require("./routes/client"));
 app.use("/api", require("./routes/product"));

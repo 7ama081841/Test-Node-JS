@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const authenticate = require("../middlewares/authenticate");
+// const authenticate = require("../middlewares/bearer");
 const productControllers = require("../controllers/product");
 
 router.post("/product", productControllers.addProduct);

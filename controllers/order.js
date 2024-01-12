@@ -9,8 +9,6 @@ const addOrder = async (req, res) => {
 
         await newOrder.save();
 
-        console.log(newOrder._id);
-
         const savedOrder = await Order.findById({
             _id: newOrder._id,
         })
@@ -27,15 +25,11 @@ const addOrder = async (req, res) => {
 
         const total = getPrice.reduce((a, b) => a + b);
 
-        console.log(total);
-
         const updatedOrder = await Order.findByIdAndUpdate(
             newOrder._id,
             { $set: { total } },
             { new: true }
         );
-
-        console.log(updatedOrder);
 
         await updateProductQuant(newOrder);
 
@@ -47,7 +41,6 @@ const addOrder = async (req, res) => {
             },
         });
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: err });
     }
 };
@@ -67,19 +60,37 @@ const updateProductQuant = async (order) => {
 const getOrderList = async (req, res) => {
     try {
         const orderList = await Order.find()
-            .populate("productList.product", "-_id -sellerId -__v  -quantity")
+            .populate("productList.product", "-_id -sellerId -__v")
             .populate("client", "-_id -password -role -__v ")
             .select("-__v");
 
         res.status(200).json({
             success: true,
-            message: "successduly created",
+            message: "successduly ",
             data: {
                 orderList,
             },
         });
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ error: err });
+    }
+};
+
+const getOneOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.orderId)
+            .select("-__v")
+            .populate("productList.product", "-_id -sellerId -__v")
+            .populate("client", "-_id -password -role -__v ");
+
+        res.status(200).json({
+            success: true,
+            message: "successduly ",
+            data: {
+                order,
+            },
+        });
+    } catch (err) {
         res.status(500).json({ error: err });
     }
 };
@@ -87,4 +98,5 @@ const getOrderList = async (req, res) => {
 module.exports = {
     addOrder,
     getOrderList,
+    getOneOrder,
 };
