@@ -8,6 +8,5 @@ router.get(
     passport.authenticate("local", { failureMessage: "user not found" }),
     clientControllers.loginClient
 );
-router.get("/allClients", clientControllers.getAllClients);
 
 module.exports = router;

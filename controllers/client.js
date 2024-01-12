@@ -135,18 +135,7 @@ const loginClient = async (req, res) => {
     }
 };
 
-const getAllClients = async (req, res) => {
-    try {
-        const clients = await Client.find();
-
-        res.json(clients);
-    } catch (err) {
-        console.log(err);
-    }
-};
-
 module.exports = {
     registerClient,
     loginClient,
-    getAllClients,
 };

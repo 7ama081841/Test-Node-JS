@@ -34,9 +34,6 @@ passport.use(
                 // const decoded = jwt.verify(token, process.env.TOKENKEY);
                 const client = await Client.findOne({ email: username });
 
-                // console.log(client);
-                console.log(password);
-
                 if (!client) {
                     return done(null, false, {
                         type: errorlogin,
@@ -49,15 +46,6 @@ passport.use(
                     password
                 );
 
-                console.log(isPassword);
-
-                if (!isPassword) {
-                    return done(null, false, {
-                        type: errorlogin,
-                        message: "email or password is not valid ",
-                    });
-                }
-
                 return done(null, client, { scope: "all" });
             } catch (err) {
                 return done(err);
@@ -69,6 +57,12 @@ passport.use(
 passport.serializeUser((client, done) => {
     done(null, client._id);
 });
+
+// passport.deserializeUser((id, done) => {
+//     Client.findById(id, (err, client) => {
+//         done(err, client);
+//     });
+// });
 
 passport.deserializeUser((id, done) => {
     Client.findById(id)

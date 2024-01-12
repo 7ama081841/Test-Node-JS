@@ -1,10 +1,15 @@
 const router = require("express").Router();
-// const authenticate = require("../middlewares/bearer");
 const productControllers = require("../controllers/product");
+const admin = require("../middlewares/admin");
+const auth = require("../middlewares/auth");
 
-router.post("/product", productControllers.addProduct);
-router.get("/products", productControllers.getProducts);
-router.get("/product/:productId", productControllers.getOneProduct);
-router.patch("/product/:productId", productControllers.updateProduct);
+router.post("/product", [auth, admin], productControllers.addProduct);
+router.patch(
+    "/product/:productId",
+    [auth, admin],
+    productControllers.updateProduct
+);
+router.get("/products", auth, productControllers.getProducts);
+router.get("/product/:productId", auth, productControllers.getOneProduct);
 
 module.exports = router;
